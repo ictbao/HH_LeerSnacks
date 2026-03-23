@@ -18,20 +18,15 @@
 			font-size: 28px; background: rgba(0,0,0,0.6); padding: 15px; border-radius: 10px;
 		}
 	
-		.startBtnContainer {
-			display: flex;
-			justify-content: center; /* Horizontal center */
-			align-items: center; /* Vertical center */
-			height: 500px; /* Required for vertical centering */
+		#startBtn {
+		    position: fixed; z-index: 99999; top:30%; left:45%; font-size: 40px; padding: 15px;
 		}
     </style>
 </head>
 <body>
 <script src="https://player.vimeo.com/api/player.js"></script>
 
-<div class="startBtnContainer">
-	<button id="startBtn" style="font-size:40px;">Start</button>
-</div>
+<button id="startBtn">Start</button>
 
 <iframe id="videoFrame"
         src=""
