@@ -149,13 +149,13 @@ let player;
 
 function updateTimer() {
     try {
-	document.getElementById("info").innerHTML= document.getElementById("info").innerHTML+'1');
+	document.getElementById("info").innerHTML= document.getElementById("info").innerHTML+'1';
 		const info = document.getElementById("info");
 		const block = getActiveBlock();
-	document.getElementById("info").innerHTML= document.getElementById("info").innerHTML+'2');
+	document.getElementById("info").innerHTML= document.getElementById("info").innerHTML+'2';
 
 		if (!block) {
-	document.getElementById("info").innerHTML= document.getElementById("info").innerHTML+'3');
+	document.getElementById("info").innerHTML= document.getElementById("info").innerHTML+'3';
 			const next = getNextBlock();
 			if (next) {
 				info.innerHTML = 'Volgende video start op <b>'+bext.startDatum+'</b> om <b>'+next.startTijd+'</b>';
@@ -165,14 +165,14 @@ function updateTimer() {
 			return;
 		}
 		else {	
-	document.getElementById("info").innerHTML= document.getElementById("info").innerHTML+'4');
+	document.getElementById("info").innerHTML= document.getElementById("info").innerHTML+'4';
 			if (!videoStarted) {		
-	document.getElementById("info").innerHTML= document.getElementById("info").innerHTML+'5');		
+	document.getElementById("info").innerHTML= document.getElementById("info").innerHTML+'5';		
 				loadVideo(block.videoID);
 			}
 		}
 	} catch(e){
-	document.getElementById("info").innerHTML= document.getElementById("info").innerHTML+'99');
+	document.getElementById("info").innerHTML= document.getElementById("info").innerHTML+'99';
 	document.getElementById("info").innerHTML= document.getElementById("info").innerHTML+'error');
 	}
 }
@@ -180,14 +180,14 @@ function updateTimer() {
 let videoStarted = false;
 
 function loadVideo(videoID) {
-	document.getElementById("info").innerHTML= document.getElementById("info").innerHTML+'a');
+	document.getElementById("info").innerHTML= document.getElementById("info").innerHTML+'a';
     const iframe = document.getElementById("videoFrame");
     iframe.src = `https://player.vimeo.com/video/${videoID}?autoplay=1&muted=0`;
 
-	document.getElementById("info").innerHTML= document.getElementById("info").innerHTML+'b');
+	document.getElementById("info").innerHTML= document.getElementById("info").innerHTML+'b';
     iframe.onload = () => {
        videoStarted =  true;
-	document.getElementById("info").innerHTML= document.getElementById("info").innerHTML+'c');
+	document.getElementById("info").innerHTML= document.getElementById("info").innerHTML+'c';
     };
 }
 
