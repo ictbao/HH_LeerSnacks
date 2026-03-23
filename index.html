@@ -158,26 +158,28 @@ function updateTimer() {
         } else {
             info.innerHTML = "Geen geplande video's meer.";
         }
-        if (player){
-			player.pause();
-			player = null;
-		}
+        //if (player){
+		//	player.pause();
+		//	player = null;
+		//}
 		return;
     }
 	else {	
-		if (!player) {				
+		if (!videoStarted) {				
 			loadVideo(block.videoID);
 		}
 	}
 }
 
+let videoStarted = false;
 
 function loadVideo(videoID) {
     const iframe = document.getElementById("videoFrame");
-    iframe.src = `https://player.vimeo.com/video/${videoID}?autoplay=1&loop=1&muted=0&controls=1&title=0&byline=0`;
+    iframe.src = `https://player.vimeo.com/video/${videoID}?autoplay=1&loop=1&muted=0&controls=0&title=0`;
 
     iframe.onload = () => {
-        player = new Vimeo.Player(iframe);
+       videoStarted =  true;
+	   // player = new Vimeo.Player(iframe);
     };
 }
 
@@ -192,5 +194,7 @@ document.getElementById("startBtn").onclick = () => {
 
 };
 </script>
+
+
 </body>
 </html>
