@@ -17,10 +17,13 @@
 			position: fixed; bottom: 20px; left: 20px; z-index: 99999;
 			font-size: 28px; background: rgba(0,0,0,0.6); padding: 15px; border-radius: 10px;
 		}
-	
-		#startBtn {
-		    position: fixed; z-index: 99999; top:30%; left:45%; font-size: 40px; padding: 15px;
-		}
+		
+
+#startBtn {
+    position: fixed; z-index: 99999; top:30%; left:45%; font-size: 40px; padding: 15px;
+}
+
+		
     </style>
 </head>
 <body>
@@ -65,14 +68,14 @@ const schedule = [
         startDatum: "2026-03-23",
         eindDatum:  "2026-03-23",
         startTijd:  "13:00",
-        eindTijd:   "13:15",
+        eindTijd:   "13:30",
         videoID:    "1119688308" //kenisrijk curriculum
     },
 	 {
         startDatum: "2026-03-26",
         eindDatum:  "2026-03-26",
         startTijd:  "13:00",
-        eindTijd:   "13:15",
+        eindTijd:   "13:30",
         videoID:    "1121079613" //kleuters met astrid
     }
        /*	
@@ -88,8 +91,8 @@ const schedule = [
 			9	'Metacognitie en zelfregulerend leren bevorderen in lager en secundair onderwijs'	'1164266903'
 			10	'Voorkennis helpt, maar niet altijd! Onderzoeksinzi…n rond het leren van breuken en decimale getallen'	'1168032245'
 			11	'Versterken van leren: technologie als kracht'	'1172076535' 
-		*/	
-	];
+		*/
+]		
 // ================================
 // FUNCTIES
 // ================================
@@ -113,6 +116,7 @@ function isNowInBlock(block) {
     const now = new Date();
     const startDate = new Date(block.startDatum);
     const endDate   = new Date(block.eindDatum);
+	endDate.setHours(23,59,59,0);
 
     if (!(now >= startDate && now <= endDate)) return false;
 
@@ -123,7 +127,7 @@ function isNowInBlock(block) {
         now.getHours().toString().padStart(2, "0") + ":" + now.getMinutes().toString().padStart(2, "0")
     );
 
-    return (nowHM >= startTime && nowHM <= endTime);
+    return (nowHM >= startTime);// && nowHM <= endTime);
 }
 
 function getActiveBlock() {
@@ -150,7 +154,7 @@ function updateTimer() {
     if (!block) {
         const next = getNextBlock();
         if (next) {
-            info.innerHTML = 'Volgende video start om <b>'+next.startTijd+'</b>';
+            info.innerHTML = 'Volgende video start op <b>'+bext.startDatum+'</b> om <b>'+next.startTijd+'</b>';
         } else {
             info.innerHTML = "Geen geplande video's meer.";
         }
@@ -161,23 +165,6 @@ function updateTimer() {
 		return;
     }
 	else {	
-		// countdown berekenen
-		const end = blockEndDateTime(block);
-		const now = new Date();
-		const diff = end - now;
-
-		if (diff <= 0) {
-			location.reload();
-			return;
-		}
-
-		const mins = Math.floor(diff / 60000);
-		const secs = Math.floor((diff % 60000) / 1000)
-			.toString()
-			.padStart(2, "0");
-
-		info.innerHTML = 'Video eindigt over <b>'+mins+':'+secs+'</b>';
-		
 		if (!player) {				
 			loadVideo(block.videoID);
 		}
@@ -187,7 +174,7 @@ function updateTimer() {
 
 function loadVideo(videoID) {
     const iframe = document.getElementById("videoFrame");
-    iframe.src = `https://player.vimeo.com/video/${videoID}?autoplay=1&loop=1&muted=0&controls=0&title=0&byline=0`;
+    iframe.src = `https://player.vimeo.com/video/${videoID}?autoplay=1&loop=1&muted=0&controls=1&title=0&byline=0`;
 
     iframe.onload = () => {
         player = new Vimeo.Player(iframe);
@@ -197,12 +184,13 @@ function loadVideo(videoID) {
 // ================================
 // Startknop voor audio
 // ================================
+
 document.getElementById("startBtn").onclick = () => {
+
 	setInterval(updateTimer, 10000);
     document.getElementById("startBtn").style.display = "none";
+
 };
 </script>
-
-
 </body>
 </html>
