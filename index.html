@@ -148,26 +148,30 @@ function getNextBlock() {
 let player;
 
 function updateTimer() {
-    const info = document.getElementById("info");
-    const block = getActiveBlock();
+    try {
+		const info = document.getElementById("info");
+		const block = getActiveBlock();
 
-    if (!block) {
-        const next = getNextBlock();
-        if (next) {
-            info.innerHTML = 'Volgende video start op <b>'+bext.startDatum+'</b> om <b>'+next.startTijd+'</b>';
-        } else {
-            info.innerHTML = "Geen geplande video's meer.";
-        }
-        //if (player){
-		//	player.pause();
-		//	player = null;
-		//}
-		return;
-    }
-	else {	
-		if (!videoStarted) {				
-			loadVideo(block.videoID);
+		if (!block) {
+			const next = getNextBlock();
+			if (next) {
+				info.innerHTML = 'Volgende video start op <b>'+bext.startDatum+'</b> om <b>'+next.startTijd+'</b>';
+			} else {
+				info.innerHTML = "Geen geplande video's meer.";
+			}
+			if (player){
+				player.pause();
+				player = null;
+			}
+			return;
 		}
+		else {	
+			if (!videoStarted) {				
+				loadVideo(block.videoID);
+			}
+		}
+	} catch(e){
+	document.getElementById("info").innerHTML= 'error');
 	}
 }
 
@@ -175,11 +179,12 @@ let videoStarted = false;
 
 function loadVideo(videoID) {
     const iframe = document.getElementById("videoFrame");
-    iframe.src = `https://player.vimeo.com/video/${videoID}?autoplay=1&loop=1&muted=0&controls=1&title=0`;
+    iframe.src = `https://player.vimeo.com/video/${videoID}?autoplay=1&muted=0`;
 
     iframe.onload = () => {
        videoStarted =  true;
-	   // player = new Vimeo.Player(iframe);
+	   player = new Vimeo.Player(iframe);
+	   player.
     };
 }
 
