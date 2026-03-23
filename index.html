@@ -38,20 +38,6 @@
 <div id="info"></div>
 
 <script>
-
-const iframe = document.getElementById('videoFrame');
-
-iframe.onload = () => {  // 3️⃣ Nu pas de player maken
-	player = new Vimeo.Player(iframe);
-
-	// optioneel unmute na klik
-	document.addEventListener("click", () => {
-		player.setMuted(false);
-	});
-};
-
-</script>
-<script>
 // ================================
 // CONFIG: DATUM + TIJD BLOKKEN
 // ================================
@@ -159,10 +145,6 @@ function updateTimer() {
 			} else {
 				info.innerHTML = "Geen geplande video's meer.";
 			}
-			if (player){
-				player.pause();
-				player = null;
-			}
 			return;
 		}
 		else {	
@@ -183,7 +165,6 @@ function loadVideo(videoID) {
 
     iframe.onload = () => {
        videoStarted =  true;
-	   player = new Vimeo.Player(iframe);
     };
 }
 
