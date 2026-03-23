@@ -4,46 +4,39 @@
     <meta charset="UTF-8">
     <title>Leersnacks TV</title>
     <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-            background: black;
-            overflow: hidden;
-        }
 
-        #videoFrame {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            border: none;
-        }
+		html, body {
+			margin: 0; background: black; height: 100%; color: white; font-family: Arial;
+		}
+
+		#videoFrame {
+			position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; border: 0;
+		}
+
+		#info {
+			position: fixed; bottom: 20px; left: 20px; z-index: 99999;
+			font-size: 28px; background: rgba(0,0,0,0.6); padding: 15px; border-radius: 10px;
+		}
+
+		#startBtn {
+			position: fixed; z-index: 99999; font-size: 40px; padding: 15px;
+		}
+
+
     </style>
 </head>
 <body>
 <script src="https://player.vimeo.com/api/player.js"></script>
 
-<button id="startBtn" style="font-size:40px;">Start video met geluid</button>
+<button id="startBtn" style="font-size:40px;">Start</button>
 
 <iframe id="videoFrame"
         src=""
-        style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;border:0;"
-        allow="autoplay; fullscreen"
-        allowfullscreen></iframe>
-
+        allow="autoplay; fullscreen"></iframe>
+		
+<div id="info"></div>
 
 <script>
-
-document.getElementById("startBtn").onclick = () => {
-    const iframe = document.getElementById('videoFrame');
-    iframe.style.display = "block";    
-	iframe.onload = () => {  // 3️⃣ Nu pas de player maken
-        document.getElementById("startBtn").style.display = "none";
-    };
-	
-	setVideo(iframe);
-};
 
 const iframe = document.getElementById('videoFrame');
 
@@ -71,42 +64,33 @@ iframe.onload = () => {  // 3️⃣ Nu pas de player maken
 //
 const schedule = [
     {
-        startDatum: "2026-03-20",
-        eindDatum:  "2026-03-25",
-        startTijd:  "08:00",
-        eindTijd:   "12:00",
-        videoID:    "1121079613" //wiskunde kleuters astrid
+        startDatum: "2026-03-23",
+        eindDatum:  "2026-03-23",
+        startTijd:  "13:00",
+        eindTijd:   "13:15",
+        videoID:    "1119688308" //kenisrijk curriculum
     },
-    {
-        startDatum: "2026-03-20",
-        eindDatum:  "2026-03-25",
-        startTijd:  "12:00",
-        eindTijd:   "16:00",
-        videoID:    "1123825957" //wiskunde kleuters suzanne
-    },
-    {
+	 {
         startDatum: "2026-03-26",
-        eindDatum:  "2026-03-30",
-        startTijd:  "09:00",
-        eindTijd:   "17:00",
-        videoID:    "1143348205" //rekenen naar algebra overgang secundair onderwijs
-    },
-    {
-        startDatum: "2026-03-26",
-        eindDatum:  "2026-03-30",
-        startTijd:  "09:00",
-        eindTijd:   "17:00",
-        videoID:    "1145357642" //partnerschap tussen school en ouders in het basisonderwijs
-    },
-    {
-        startDatum: "2026-03-26",
-        eindDatum:  "2026-03-30",
-        startTijd:  "09:00",
-        eindTijd:   "17:00",
-        videoID:    "1154230525" //de kracht van academisch optimisme: leerprestaties en eerlijke kansen bevorderen
+        eindDatum:  "2026-03-26",
+        startTijd:  "13:00",
+        eindTijd:   "13:15",
+        videoID:    "1121079613" //kleuters met astrid
     }
-];
-
+       /*	
+			0	'Vooruitblik 2025-2026'	'1119702815'
+			1	'Kennisrijk curriculum'	'1119688308'
+			2	'Wiskunde in de kleuterklas: lessen uit de wetenschap als input voor de praktijk'	'1121079613'
+			3	'Wiskundetaal in de kleuterklas: hoe evidence-informed stimuleren?'	'1123825957'
+			4	'Model voor evidence-informed onderwijs'	'1129785096'
+			5	'Feedback die verschil maakt'	'1138014374'
+			6	'Van rekenen naar algebra: de overgang naar het secundair onderwijs'	'1143348205'
+			7	'Partnerschap tussen school en ouders in het basisonderwijs'	'1145357642'
+			8	'De kracht van academisch optimisme: leerprestaties én eerlijke kansen bevorderen'	'1154230525'
+			9	'Metacognitie en zelfregulerend leren bevorderen in lager en secundair onderwijs'	'1164266903'
+			10	'Voorkennis helpt, maar niet altijd! Onderzoeksinzi…n rond het leren van breuken en decimale getallen'	'1168032245'
+			11	'Versterken van leren: technologie als kracht'	'1172076535' 
+		*/	
 // ================================
 // FUNCTIES
 // ================================
@@ -117,6 +101,14 @@ function parseTime(str) {
     d.setHours(h, m, 0, 0);
     return d;
 }
+
+function blockEndDateTime(block) {
+    let d = new Date(block.eindDatum);
+    const [h, m] = block.eindTijd.split(":");
+    d.setHours(h, m, 0, 0);
+    return d;
+}
+
 
 function isNowInBlock(block) {
     const now = new Date();
@@ -135,23 +127,83 @@ function isNowInBlock(block) {
     return (nowHM >= startTime && nowHM <= endTime);
 }
 
-function findActiveVideo() {
-    for (const block of schedule) {
-        if (isNowInBlock(block)) return block.videoID;
+function getActiveBlock() {
+    return schedule.find(block => isNowInBlock(block)) || null;
+}
+
+function getNextBlock() {
+    const now = new Date();
+    const future = schedule
+        .map(b => ({ block: b, start: parseTime(b.startTijd) }))
+        .filter(x => parseTime(x.block.startTijd) > now)
+        .sort((a,b) => a.start - b.start);
+
+    return future.length ? future[0].block : null;
+}
+
+
+let player;
+
+function updateTimer() {
+    const info = document.getElementById("info");
+    const block = getActiveBlock();
+
+    if (!block) {
+        const next = getNextBlock();
+        if (next) {
+            info.innerHTML = 'Volgende video start om <b>'+next.startTijd+'</b>';
+        } else {
+            info.innerHTML = "Geen geplande video's meer.";
+        }
+        if (player){
+			player.pause();
+			player = null;
+		}
+		return;
     }
-    return null;
+	else {	
+		// countdown berekenen
+		const end = blockEndDateTime(block);
+		const now = new Date();
+		const diff = end - now;
+
+		if (diff <= 0) {
+			location.reload();
+			return;
+		}
+
+		const mins = Math.floor(diff / 60000);
+		const secs = Math.floor((diff % 60000) / 1000)
+			.toString()
+			.padStart(2, "0");
+
+		info.innerHTML = 'Video eindigt over <b>'+mins+':'+secs+'</b>';
+		
+		if (!player) {				
+			loadVideo(block.videoID);
+		}
+	}
 }
 
 
-function setVideo(iframe) {
+function loadVideo(videoID) {
+    const iframe = document.getElementById("videoFrame");
+    iframe.src = `https://player.vimeo.com/video/${videoID}?autoplay=1&loop=1&muted=0&controls=0&title=0&byline=0`;
 
-	var id = findActiveVideo();
-	if (id != null)
-    iframe.src =
-        `https://player.vimeo.com/video/${id}?autoplay=1&loop=1&title=0&byline=0&portrait=0&controls=0&muted=0`;
+    iframe.onload = () => {
+        player = new Vimeo.Player(iframe);
+    };
 }
 
+// ================================
+// Startknop voor audio
+// ================================
+document.getElementById("startBtn").onclick = () => {
+	setInterval(updateTimer, 10000);
+    document.getElementById("startBtn").style.display = "none";
+};
 </script>
+
 
 </body>
 </html>
