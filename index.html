@@ -38,6 +38,20 @@
 <div id="info"></div>
 
 <script>
+
+const iframe = document.getElementById('videoFrame');
+
+iframe.onload = () => {  // 3️⃣ Nu pas de player maken
+	player = new Vimeo.Player(iframe);
+
+	// optioneel unmute na klik
+	document.addEventListener("click", () => {
+		player.setMuted(false);
+	});
+};
+
+</script>
+<script>
 // ================================
 // CONFIG: DATUM + TIJD BLOKKEN
 // ================================
@@ -135,10 +149,13 @@ let player;
 
 function updateTimer() {
     try {
+	document.getElementById("info").innerHTML= document.getElementById("info").innerHTML+'1');
 		const info = document.getElementById("info");
 		const block = getActiveBlock();
+	document.getElementById("info").innerHTML= document.getElementById("info").innerHTML+'2');
 
 		if (!block) {
+	document.getElementById("info").innerHTML= document.getElementById("info").innerHTML+'3');
 			const next = getNextBlock();
 			if (next) {
 				info.innerHTML = 'Volgende video start op <b>'+bext.startDatum+'</b> om <b>'+next.startTijd+'</b>';
@@ -148,23 +165,29 @@ function updateTimer() {
 			return;
 		}
 		else {	
-			if (!videoStarted) {				
+	document.getElementById("info").innerHTML= document.getElementById("info").innerHTML+'4');
+			if (!videoStarted) {		
+	document.getElementById("info").innerHTML= document.getElementById("info").innerHTML+'5');		
 				loadVideo(block.videoID);
 			}
 		}
 	} catch(e){
-	document.getElementById("info").innerHTML = "error";
+	document.getElementById("info").innerHTML= document.getElementById("info").innerHTML+'99');
+	document.getElementById("info").innerHTML= document.getElementById("info").innerHTML+'error');
 	}
 }
 
 let videoStarted = false;
 
 function loadVideo(videoID) {
+	document.getElementById("info").innerHTML= document.getElementById("info").innerHTML+'a');
     const iframe = document.getElementById("videoFrame");
     iframe.src = `https://player.vimeo.com/video/${videoID}?autoplay=1&muted=0`;
 
+	document.getElementById("info").innerHTML= document.getElementById("info").innerHTML+'b');
     iframe.onload = () => {
        videoStarted =  true;
+	document.getElementById("info").innerHTML= document.getElementById("info").innerHTML+'c');
     };
 }
 
