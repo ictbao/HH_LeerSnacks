@@ -161,10 +161,12 @@ let videoStarted = false;
 
 function loadVideo(videoID) {
     const iframe = document.getElementById("videoFrame");
-    iframe.src = `https://player.vimeo.com/video/${videoID}?autoplay=1&muted=0`;
+    iframe.src = `https://player.vimeo.com/video/${videoID}?autoplay=1&muted=1&controls=0&background=1`;
 
     iframe.onload = () => {
        videoStarted =  true;
+		player = new Vimeo.Player(iframe);
+		if (player) player.setMuted(false);
     };
 }
 
