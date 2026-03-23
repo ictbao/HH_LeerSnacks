@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>Leersnacks TV</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            background: black;
+            overflow: hidden;
+        }
+
+        #videoFrame {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+<script src="https://player.vimeo.com/api/player.js"></script>
+
+<button id="startBtn" style="font-size:40px;">Start video met geluid</button>
+
+<iframe id="videoFrame"
+        src=""
+        style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;border:0;"
+        allow="autoplay; fullscreen"
+        allowfullscreen></iframe>
+
+
+<script>
+
+document.getElementById("startBtn").onclick = () => {
+    const iframe = document.getElementById('videoFrame');
+    iframe.style.display = "block";    
+	iframe.onload = () => {  // 3️⃣ Nu pas de player maken
+        document.getElementById("startBtn").style.display = "none";
+    };
+	
+	setVideo(iframe);
+};
+
+const iframe = document.getElementById('videoFrame');
+
+iframe.onload = () => {  // 3️⃣ Nu pas de player maken
+	player = new Vimeo.Player(iframe);
+
+	// optioneel unmute na klik
+	document.addEventListener("click", () => {
+		player.setMuted(false);
+	});
+};
+
+</script>
+<script>
+// ================================
+// CONFIG: DATUM + TIJD BLOKKEN
+// ================================
+//
+// Elk blok heeft:
+// - startDatum
+// - eindDatum
+// - startTijd ("HH:MM")
+// - eindTijd ("HH:MM")
+// - videoID (van Vimeo)
+//
+const schedule = [
+    {
+        startDatum: "2026-03-20",
+        eindDatum:  "2026-03-25",
+        startTijd:  "08:00",
+        eindTijd:   "12:00",
+        videoID:    "1121079613" //wiskunde kleuters astrid
+    },
+    {
+        startDatum: "2026-03-20",
+        eindDatum:  "2026-03-25",
+        startTijd:  "12:00",
+        eindTijd:   "16:00",
+        videoID:    "1123825957" //wiskunde kleuters suzanne
+    },
+    {
+        startDatum: "2026-03-26",
+        eindDatum:  "2026-03-30",
+        startTijd:  "09:00",
+        eindTijd:   "17:00",
+        videoID:    "1143348205" //rekenen naar algebra overgang secundair onderwijs
+    },
+    {
+        startDatum: "2026-03-26",
+        eindDatum:  "2026-03-30",
+        startTijd:  "09:00",
+        eindTijd:   "17:00",
+        videoID:    "1145357642" //partnerschap tussen school en ouders in het basisonderwijs
+    },
+    {
+        startDatum: "2026-03-26",
+        eindDatum:  "2026-03-30",
+        startTijd:  "09:00",
+        eindTijd:   "17:00",
+        videoID:    "1154230525" //de kracht van academisch optimisme: leerprestaties en eerlijke kansen bevorderen
+    }
+];
+
+// ================================
+// FUNCTIES
+// ================================
+
+function parseTime(str) {
+    const [h, m] = str.split(":").map(Number);
+    const d = new Date();
+    d.setHours(h, m, 0, 0);
+    return d;
+}
+
+function isNowInBlock(block) {
+    const now = new Date();
+    const startDate = new Date(block.startDatum);
+    const endDate   = new Date(block.eindDatum);
+
+    if (!(now >= startDate && now <= endDate)) return false;
+
+    const startTime = parseTime(block.startTijd);
+    const endTime   = parseTime(block.eindTijd);
+
+    const nowHM = parseTime(
+        now.getHours().toString().padStart(2, "0") + ":" + now.getMinutes().toString().padStart(2, "0")
+    );
+
+    return (nowHM >= startTime && nowHM <= endTime);
+}
+
+function findActiveVideo() {
+    for (const block of schedule) {
+        if (isNowInBlock(block)) return block.videoID;
+    }
+    return null;
+}
+
+
+function setVideo(iframe) {
+
+	var id = findActiveVideo();
+	if (id != null)
+    iframe.src =
+        `https://player.vimeo.com/video/${id}?autoplay=1&loop=1&title=0&byline=0&portrait=0&controls=0&muted=0`;
+}
+
+</script>
+
+</body>
+</html>
