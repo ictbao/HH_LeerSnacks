@@ -175,7 +175,7 @@ let videoStarted = false;
 
 function loadVideo(videoID) {
     const iframe = document.getElementById("videoFrame");
-    iframe.src = `https://player.vimeo.com/video/${videoID}?autoplay=1&loop=1&muted=0&controls=0&title=0`;
+    iframe.src = `https://player.vimeo.com/video/${videoID}?autoplay=1&loop=1&muted=0&controls=1&title=0`;
 
     iframe.onload = () => {
        videoStarted =  true;
