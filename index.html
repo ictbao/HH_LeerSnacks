@@ -51,18 +51,59 @@
 //
 const schedule = [
     {
-        startDatum: "2026-03-23",
-        eindDatum:  "2026-03-23",
-        startTijd:  "13:00",
-        eindTijd:   "13:30",
-        videoID:    "1119688308" //kenisrijk curriculum
+        startDatum: "2026-03-30",
+        eindDatum:  "2026-03-30",
+        videoID:    "1121079613" //Wiskunde in de kleuterklas
     },
 	 {
-        startDatum: "2026-03-26",
-        eindDatum:  "2026-03-26",
-        startTijd:  "13:00",
-        eindTijd:   "13:30",
-        videoID:    "1121079613" //kleuters met astrid
+        startDatum: "2026-04-20",
+        eindDatum:  "2026-04-20",
+        videoID:    "1119688308" //Kennisrijk curriculum
+    },
+	 {
+        startDatum: "2026-04-23",
+        eindDatum:  "2026-04-23",
+        videoID:    "1123825957" //Wiskundetaal in de kleuterklas
+    },
+	 {
+        startDatum: "2026-04-27",
+        eindDatum:  "2026-04-27",
+        videoID:    "1138014374" //Feedback die verschil maakt
+    },
+	 {
+        startDatum: "2026-05-04",
+        eindDatum:  "2026-05-04",
+        videoID:    "1154230525" //De kracht van academisch optimisme
+    },
+	 {
+        startDatum: "2026-05-07",
+        eindDatum:  "2026-05-07",
+        videoID:    "1143348205" //Van rekenen naar algebra
+    },
+	 {
+        startDatum: "2026-05-11",
+        eindDatum:  "2026-05-11",
+        videoID:    "1168032245" //Voorkennis helpt, maar niet altijd
+    },
+	 {
+        startDatum: "2026-05-18",
+        eindDatum:  "2026-05-18",
+        videoID:    "1145357642" //Partnerschap tussen school en ouders in het basisonderwijs
+    },
+	 {
+        startDatum: "2026-05-21",
+        eindDatum:  "2026-05-21",
+        videoID:    "1164266903" //metacognitie en zelfregulerend leren bevorderen in het lager en secundair onderwijs
+    },
+	 {
+        startDatum: "2026-05-28",
+        eindDatum:  "2026-05-28",
+        videoID:    "1172076535" //Versterken van leren: technologie als kracht
+    },
+	 {
+        startDatum: "2026-06-01",
+        eindDatum:  "2026-06-01",
+        videoID:    "1129785096" //Model voor evidence-informed onderwijs
     }
        /*	
 			0	'Vooruitblik 2025-2026'	'1119702815'
@@ -82,22 +123,6 @@ const schedule = [
 // ================================
 // FUNCTIES
 // ================================
-
-function parseTime(str) {
-    const [h, m] = str.split(":").map(Number);
-    const d = new Date();
-    d.setHours(h, m, 0, 0);
-    return d;
-}
-
-function blockEndDateTime(block) {
-    let d = new Date(block.eindDatum);
-    const [h, m] = block.eindTijd.split(":");
-    d.setHours(h, m, 0, 0);
-    return d;
-}
-
-
 function isNowInBlock(block) {
     const now = new Date();
     const startDate = new Date(block.startDatum);
@@ -105,46 +130,23 @@ function isNowInBlock(block) {
 	endDate.setHours(23,59,59,0);
 
     if (!(now >= startDate && now <= endDate)) return false;
-
-    const startTime = parseTime(block.startTijd);
-    const endTime   = parseTime(block.eindTijd);
-
-    const nowHM = parseTime(
-        now.getHours().toString().padStart(2, "0") + ":" + now.getMinutes().toString().padStart(2, "0")
-    );
-
-    return (nowHM >= startTime);// && nowHM <= endTime);
+	else return true; 
 }
 
 function getActiveBlock() {
     return schedule.find(block => isNowInBlock(block)) || null;
 }
 
-function getNextBlock() {
-    const now = new Date();
-    const future = schedule
-        .map(b => ({ block: b, start: parseTime(b.startTijd) }))
-        .filter(x => parseTime(x.block.startTijd) > now)
-        .sort((a,b) => a.start - b.start);
-
-    return future.length ? future[0].block : null;
-}
-
-
 let player;
 
 function updateTimer() {
     try {
 		const info = document.getElementById("info");
+		info.innerHTML = "";
 		const block = getActiveBlock();
 
 		if (!block) {
-			const next = getNextBlock();
-			if (next) {
-				info.innerHTML = 'Volgende video start op <b>'+bext.startDatum+'</b> om <b>'+next.startTijd+'</b>';
-			} else {
-				info.innerHTML = "Geen geplande video's meer.";
-			}
+			info.innerHTML = "Geen geplande video's vandaag.";
 			return;
 		}
 		else {	
@@ -175,7 +177,9 @@ function loadVideo(videoID) {
 // ================================
 
 document.getElementById("startBtn").onclick = () => {
-
+	const info = document.getElementById("info");
+	info.innerHTML = "Selecteren van de video...";
+	
 	setInterval(updateTimer, 10000);
     document.getElementById("startBtn").style.display = "none";
 
